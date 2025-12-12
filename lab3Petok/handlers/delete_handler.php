@@ -1,0 +1,22 @@
+<?php
+
+include '../database/db_connection.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+    $id = intval($_POST['id']);
+    $db = connectDatabase();
+
+    // Delete student by ID
+    $stmt = $db->prepare("DELETE FROM events WHERE id = :id AND NOT type=='private'");
+    $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
+    $stmt->execute();
+
+    // Close the database connection
+    $db->close();
+
+    // Redirect back to the view page
+    header("Location: ../index.php");
+    exit();
+} else {
+    echo "Invalid request.";
+}
